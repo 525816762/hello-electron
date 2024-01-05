@@ -6,7 +6,7 @@ const createWindow = () => {
   // 创建浏览窗口
   const mainWindow = new BrowserWindow({
     width: 750,
-    height: 450,
+    height: 600,
     // alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),

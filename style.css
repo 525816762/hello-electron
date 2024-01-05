@@ -13,3 +13,8 @@ body {
 textarea {
   -webkit-app-region: no-drag;
 }
+
+#support {
+  text-align: center;
+  margin-top: 10px;
+}
