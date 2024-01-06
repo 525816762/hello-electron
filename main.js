@@ -1,11 +1,18 @@
 // electron 模块可以用来控制应用的生命周期和创建原生浏览窗口
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 
 const handleSetTitle = (event, title) => {
   const webContents = event.sender;
   const win = BrowserWindow.fromWebContents(webContents);
   win.setTitle(title);
+};
+
+const handleFileOpen = async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog();
+  if (!canceled) {
+    return filePaths[0];
+  }
 };
 
 const createWindow = () => {
@@ -31,6 +38,7 @@ const createWindow = () => {
 // 部分 API 在 ready 事件触发后才能使用。
 app.whenReady().then(() => {
   ipcMain.on("set-title", handleSetTitle);
+  ipcMain.handle("dialog:openFile", handleFileOpen);
   ipcMain.handle("ping", () => "pong");
   createWindow();
 
