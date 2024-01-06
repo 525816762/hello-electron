@@ -2,6 +2,12 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
+const handleSetTitle = (event, title) => {
+  const webContents = event.sender;
+  const win = BrowserWindow.fromWebContents(webContents);
+  win.setTitle(title);
+};
+
 const createWindow = () => {
   // 创建浏览窗口
   const mainWindow = new BrowserWindow({
@@ -24,6 +30,7 @@ const createWindow = () => {
 // 和创建浏览器窗口的时候调用
 // 部分 API 在 ready 事件触发后才能使用。
 app.whenReady().then(() => {
+  ipcMain.on("set-title", handleSetTitle);
   ipcMain.handle("ping", () => "pong");
   createWindow();
 
