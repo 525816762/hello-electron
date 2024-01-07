@@ -1,5 +1,5 @@
 // electron 模块可以用来控制应用的生命周期和创建原生浏览窗口
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require("electron");
 const path = require("path");
 
 const handleSetTitle = (event, title) => {
@@ -25,6 +25,23 @@ const createWindow = () => {
       preload: path.join(__dirname, "preload.js"),
     },
   });
+  
+  const menu = Menu.buildFromTemplate([
+    {
+      label: app.name,
+      submenu: [
+        {
+          click: () => mainWindow.webContents.send('update-counter', 1),
+          label: 'Increment'
+        },
+        {
+          click: () => mainWindow.webContents.send('update-counter', -1),
+          label: 'Decrement'
+        }
+      ]
+    }
+  ])
+  Menu.setApplicationMenu(menu)
 
   // 加载 index.html
   mainWindow.loadFile(path.join(__dirname, "index.html"));
@@ -40,6 +57,9 @@ app.whenReady().then(() => {
   ipcMain.on("set-title", handleSetTitle);
   ipcMain.handle("dialog:openFile", handleFileOpen);
   ipcMain.handle("ping", () => "pong");
+  ipcMain.on('counter-value', (_event, value) => {
+    console.log('counter-value', value)
+  })
   createWindow();
 
   app.on("activate", () => {
