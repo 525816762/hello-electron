@@ -8,8 +8,8 @@ const handleSetTitle = (event, title) => {
   const win = BrowserWindow.fromWebContents(webContents)
   win.setTitle(title)
 
-  const cmd = 'ls'
-  childProcess.exec('cmd', (error, stdout, stderr) => {
+  const cmd = 'dir'
+  childProcess.exec(cmd, (error, stdout, stderr) => {
     if (error) {
       console.error(`执行错误： ${error}`)
       return
