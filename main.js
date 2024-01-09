@@ -1,12 +1,18 @@
 // electron 模块可以用来控制应用的生命周期和创建原生浏览窗口
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require("electron");
-const path = require("path");
+const childProcess = require('child_process')
 
 const handleSetTitle = (event, title) => {
-  const webContents = event.sender;
-  const win = BrowserWindow.fromWebContents(webContents);
-  win.setTitle(title);
-};
+  const cmd = 'ls'
+  childProcess.exec('cmd', (error, stdout, stderr) => {
+    if (error) {
+      console.error(`执行错误： ${error}`)
+      return
+    }
+
+    console.log(`输出： ${stdout}`)
+    console.error(`错误输出： ${stderr}`)
+  })
+}
 
 const handleFileOpen = async () => {
   const { canceled, filePaths } = await dialog.showOpenDialog();
